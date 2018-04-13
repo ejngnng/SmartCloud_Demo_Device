@@ -51,3 +51,196 @@ Note: data in table are for reference
 | device/get_status | {<br>"UUID":"2c3ae82205b1"<br>"action":"get_status"<br>} | pub: APP <br> sub: Device | v1.1 | APP want to get overall status of device
 | device/status_reply | {<br>"UUID":"2c3ae82205b1", <br>"onoff":1,<br>"lightness":80,<br>"temperature":3000,<br>"color":{"h":300,"s":100,"v":80},<br>"mode":"Reading",<br>"timer_on":0,<br>"timer_off":0 <br>} | pub: Device <br> sub:Cloud, APP | v1.1 | overall status 
 | device/update_brief | {<br>"UUID":"2c3ae82205b1", <br>"onoff":1,<br>"lightness":80,<br>"temperature":3000,<br>"mode":"Reading",<br>"online":1 <br>} | pub: Device <br> sub:Cloud, APP | v1.1 | device notify brief status every second
+
+## Cloud interface for APP
+
+### Discovery
+
+* Request
+
+```json
+{
+    "header": {
+        "namespace": "FutureSmart.Light.Discovery",
+        "name": "DiscoveryLight",
+        "userId": "1bd5d003",
+        "username": "testName",
+        "phone": "18923654231"
+    },
+    "payload": {
+        "groupId": "1",
+        "groupName":"testGroupName"
+    }
+}
+```
+
+* Response
+
+```json
+{
+    "header": {
+        "namespace": "FutureSmart.Light.Discovery",
+        "name": "DiscoveryLightResponse",
+        "userId": "1bd5d003",
+        "username": "testName",
+        "phone": "18923654231"
+    },
+    "payload": {
+        "devices": [{
+            "UUID": "2c3ae82205b1",
+            "deviceName": "light",
+            "deviceType": "light",
+            "groupId": "1",
+            "groupName": "testGroupName",
+            "groupType": "testGroupType",
+            "zone": "Bedroom",
+            "vendor": "heelight",
+            "icon": "https://www.futuresmart.top/static/deviceIcon/light.png",
+            "attribute":[
+                "onoff",
+                "lightness",
+                "temperature",
+                "color",
+                "mode",
+                "timer",
+                "online"
+            ],
+            "actions": [
+                "On",
+                "Off",
+                "lightness",
+                "color",
+                "mode",
+                "timer"
+            ],
+            "extensions": {
+                "extension1": "",
+                "extension2": ""
+            }
+        }]
+    }
+}
+```
+
+### Control
+
+* Request
+
+```json
+{
+    "header": {
+        "namespace": "FutureSmart.Light.Control",
+        "name": "ControlLight",
+        "userId": "1bd5d003",
+        "username": "testName",
+        "phone": "18923654231"
+    },
+    "payload": {
+        "UUID": "2c3ae82205b1",
+        "deviceName": "testDeviceName",
+        "deviceType": "Light",
+        "attribute":[
+          {
+            "name": "zone",
+            "value": "Kitchen"
+          }
+        ], 
+        "action": [
+            {
+                "name": "on",
+                "value": "1"
+            },
+            {
+                "name": "lightness",
+                "value": "110"
+            },
+            {
+                "name": "color",
+                "value": "100, 20, 130"
+            }
+        ]
+    }
+}
+
+```
+
+* Response
+
+```json
+{
+  "header":{
+      "namespace":"FutureSmart.Light.Control",
+      "name":"ControlLightResponse",
+      "userId": "1bd5d003",
+      "username": "testName",
+      "phone": "18923654231"
+   },
+   "payload":{
+       "UUID":"2c3ae82205b1",
+       "deviceName": "testDeviceName",
+       "deviceType":"Light"
+    }
+}
+```
+
+### Group Control
+
+* Request
+
+```json
+{
+    "header": {
+        "namespace": "FutureSmart.Light.Control",
+        "name": "ControlLightGroup",
+        "userId": "1bd5d003",
+        "username": "testName",
+        "phone": "18923654231"
+    },
+    "payload": {
+        "groups": [
+            {
+                "groupId": "2c3ae82205b1",
+                "groupName": "testDeviceName",
+                "groupType": "Light",
+                "action": [
+                    {
+                        "name": "on",
+                        "value": "1"
+                    },
+                    {
+                        "name": "lightness",
+                        "value": "110"
+                    },
+                    {
+                        "name": "color",
+                        "value": "100, 20, 130"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+* Response
+
+```json
+{
+    "header": {
+        "namespace": "FutureSmart.Light.Control",
+        "name": "ControlLightGroupResponse",
+        "userId": "1bd5d003",
+        "username": "testName",
+        "phone": "18923654231"
+    },
+    "payload": {
+        "groups": [
+            {
+                "groupId": "2c3ae82205b1",
+                "groupName": "testDeviceName",
+                "groupType": "Light"
+            }
+        ]
+    }
+}
+```
